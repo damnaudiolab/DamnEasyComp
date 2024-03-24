@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.24.1)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(PROJECT_NAME "DamnEasyComp")
 
-set(FORMATS AUv3 VST3 Standalone)
+set(FORMATS AUv3 VST3 Standalone AU)
 
 project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES CXX)
 
@@ -16,6 +16,7 @@ add_subdirectory(Modules/JUCE)
 
 juce_add_plugin("${PROJECT_NAME}"
     COMPANY_NAME "DamnAudioLab"
+    BUNDLE_ID "com.damnaudiolab.damneasycomp"
     IS_SYNTH FALSE
     NEEDS_MIDI_INPUT FALSE
     NEEDS_MIDI_OUTPUT FALSE
