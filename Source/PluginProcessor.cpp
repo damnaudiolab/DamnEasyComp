@@ -20,18 +20,18 @@ PluginProcessor::PluginProcessor()
                  std::make_unique<juce::AudioParameterFloat>(
                    "amount",
                    "Amount",
-                   juce::NormalisableRange<float>(0.0f, 100.f, 0.1f),
-                   0.0f),
+                   juce::NormalisableRange<float>(0.0f, 200.0f, 1.0f),
+                   100.0f),
                  std::make_unique<juce::AudioParameterFloat>(
                    "speed",
                    "Speed",
-                   juce::NormalisableRange<float>(10.0f, 2000.f, 0.1f, 0.5f),
-                   200.0f),
+                   juce::NormalisableRange<float>(25.0f, 2000.0f, 1.0f, 0.5f),
+                   100.0f),
                  std::make_unique<juce::AudioParameterFloat>(
                    "makeup",
                    "Make Up",
-                   juce::NormalisableRange<float>(0.0f, 12.f, 0.01f),
-                   0.0f),
+                   juce::NormalisableRange<float>(0.0f, 12.f, 0.1f),
+                   6.0f),
                })
 {
   amount = parameters.getRawParameterValue("amount");
@@ -125,12 +125,11 @@ PluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
   // initialisation that you need..
   juce::ignoreUnused(samplesPerBlock);
 
-  numChannels =
-    juce::jmin(getTotalNumInputChannels(), getTotalNumOutputChannels());
+  const auto numChannels = (unsigned)getTotalNumInputChannels();
 
-  msFeedbackMem = new float[numChannels]();
-  envFeedbackMem = new float[numChannels]();
-  postFeedbackMem = new float[numChannels]();
+  msMem = new float[numChannels]();
+  envMem = new float[numChannels]();
+  postMem = new float[numChannels]();
 
   currentSampleRate = (float)sampleRate;
 }
@@ -180,27 +179,27 @@ PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
   for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
     buffer.clear(i, 0, numSamples);
 
-  for (int ch = 0; ch < numChannels; ++ch) {
+  for (auto ch = 0; ch < totalNumInputChannels; ++ch) {
     auto* inputBuffer = buffer.getReadPointer(ch);
     auto* outputBuffer = buffer.getWritePointer(ch);
 
     for (auto i = 0; i < numSamples; ++i) {
       auto x = inputBuffer[i];
 
-      auto pole = t2p(envFeedbackMem[ch]);
-      auto ms = (1.0f - pole) * powf(postFeedbackMem[ch], 2.0f) +
-                pole * msFeedbackMem[ch];
-      msFeedbackMem[ch] = ms;
-      auto rms = sqrtf(ms);
+      auto rms = sqrtf(msMem[ch]);
 
-      auto env = expf(rms * *amount / -2.0f); // exp( -50 * (amount / 100) )
-      envFeedbackMem[ch] = (*speed * env / 1000.0f);
+      auto pole = t2p(expf(-1.0f * rms * *amount * 0.01f) * (*speed * 0.001f));
 
-      auto y = x * env;
-      postFeedbackMem[ch] = y;
+      auto ms = (1.0f - pole) * (postMem[ch] * postMem[ch]) + pole * msMem[ch];
+      msMem[ch] = ms;
 
-      outputBuffer[i] =
-        y * juce::Decibels::decibelsToGain(*makeup * *amount / 100);
+      auto gain = juce::Decibels::decibelsToGain(-1.0f * rms * *amount);
+
+      auto y =
+        x * gain * juce::Decibels::decibelsToGain(*makeup * *amount * 0.01f);
+      postMem[ch] = y;
+
+      outputBuffer[i] = y;
     }
   }
 }

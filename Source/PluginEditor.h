@@ -22,10 +22,10 @@ private:
   int bodyWidth = 600;
   int bodyHeight = 360;
 
-#define wCent bodyWidth / 100;
-#define hCent bodyHeight / 100;
+#define wCent bodyWidth / 100
+#define hCent bodyHeight / 100
 
-  int headerHeight = 36 * hCent;
+  int headerHeight = 34 * hCent;
 
   int sliderTextBoxWidth = 20 * wCent;
   int sliderTextBoxHeight = 10 * hCent;
@@ -33,7 +33,7 @@ private:
   int logoReduce = 8 * hCent;
   int sliderReduce = 8 * hCent;
 
-  int sliderLabelHeight = 5 * hCent;
+  int sliderLabelHeight = 8 * hCent;
 
   int sliderWidth = 30 * wCent;
 

@@ -32,8 +32,9 @@ public:
   {
     auto sliderMin = (float)sliderRef.getMinimum();
     auto sliderMax = (float)sliderRef.getMaximum();
-    auto sliderCenter =
-      juce::MathConstants<float>::pi * sliderMin / (sliderMin - sliderMax);
+    auto sliderCenter = juce::jmax(0.0f,
+                                   juce::MathConstants<float>::pi * sliderMin /
+                                     (sliderMin - sliderMax));
     auto toAngle =
       rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
     auto bounds = juce::Rectangle<int>(x, y, width, height).toFloat();
@@ -134,5 +135,5 @@ public:
   };
 
 private:
-  float fontSize = 24.0f;
+  float fontSize = 20.0f;
 };

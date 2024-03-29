@@ -25,6 +25,7 @@ PluginEditor::PluginEditor(PluginProcessor& p,
   amountSlider.setTextBoxStyle(
     juce::Slider::TextBoxBelow, false, sliderTextBoxWidth, sliderTextBoxHeight);
   amountSlider.setNumDecimalPlacesToDisplay(1);
+  amountSlider.setTextValueSuffix("%");
   amountSlider.setColour(juce::Slider::ColourIds::textBoxOutlineColourId,
                          juce::Colours::transparentBlack);
   amountSlider.setBounds(amountSliderArea);
@@ -44,6 +45,7 @@ PluginEditor::PluginEditor(PluginProcessor& p,
   speedSlider.setTextBoxStyle(
     juce::Slider::TextBoxBelow, false, sliderTextBoxWidth, sliderTextBoxHeight);
   speedSlider.setNumDecimalPlacesToDisplay(1);
+  speedSlider.setTextValueSuffix("ms");
   speedSlider.setColour(juce::Slider::ColourIds::textBoxOutlineColourId,
                         juce::Colours::transparentBlack);
   speedSlider.setBounds(speedSliderArea);
@@ -62,7 +64,8 @@ PluginEditor::PluginEditor(PluginProcessor& p,
   makeupSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   makeupSlider.setTextBoxStyle(
     juce::Slider::TextBoxBelow, false, sliderTextBoxWidth, sliderTextBoxHeight);
-  makeupSlider.setNumDecimalPlacesToDisplay(2);
+  makeupSlider.setNumDecimalPlacesToDisplay(1);
+  makeupSlider.setTextValueSuffix("dB");
   makeupSlider.setColour(juce::Slider::ColourIds::textBoxOutlineColourId,
                          juce::Colours::transparentBlack);
   makeupSlider.setBounds(makeupSliderArea);

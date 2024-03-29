@@ -44,15 +44,13 @@ private:
   std::atomic<float>* speed = nullptr;
   std::atomic<float>* makeup = nullptr;
 
-  int numChannels;
-
-  float* msFeedbackMem;
-  float* envFeedbackMem;
-  float* postFeedbackMem;
+  float* msMem;
+  float* envMem;
+  float* postMem;
 
   float currentSampleRate = 44100.0f;
 
-  float t2p(float t) { return expf(-1.0f / (t * currentSampleRate)); };
+  float t2p(float t) { return expf(-1.0f / (t * currentSampleRate)); }
 
   float sum(float* x, int numValues)
   {
@@ -61,7 +59,7 @@ private:
       y += x[i];
     }
     return y;
-  };
+  }
 
   float avg(float* x, int numValues)
   {
