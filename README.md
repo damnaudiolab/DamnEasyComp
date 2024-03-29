@@ -13,7 +13,7 @@ TODO
 | :----------: | :---: | :---: | :-----: | :--------------------------------------------- |
 |  Amount [%]  |   0   |  100  |    0    | Intensity of Gain Reduction                    |
 |  Speed [ms]  |  10   | 2000  |   100   | Response speed of the dynamics control         |
-| Make Up [dB] |  0.0  | 12.00 |  12.0   | Amount of gain to be recovered after reduction |
+| Make Up [dB] |  0.0  | 12.0  |   6.0   | Amount of gain to be recovered after reduction |
 
 # Installation
 
