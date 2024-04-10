@@ -128,7 +128,6 @@ PluginProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
   const auto numChannels = (unsigned)getTotalNumInputChannels();
 
   msMem = new float[numChannels]();
-  envMem = new float[numChannels]();
   postMem = new float[numChannels]();
 
   currentSampleRate = (float)sampleRate;
@@ -188,15 +187,16 @@ PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
 
       auto rms = sqrtf(msMem[ch]);
 
-      auto pole = t2p(expf(-1.0f * rms * *amount * 0.01f) * (*speed * 0.001f));
+      auto pole = t2p(expf(rms * *amount * -0.01f) * (*speed * 0.001f));
 
       auto ms = (1.0f - pole) * (postMem[ch] * postMem[ch]) + pole * msMem[ch];
       msMem[ch] = ms;
 
-      auto gain = juce::Decibels::decibelsToGain(-1.0f * rms * *amount);
+      auto env_gain = -1.0f * rms * *amount;
 
-      auto y =
-        x * gain * juce::Decibels::decibelsToGain(*makeup * *amount * 0.01f);
+      auto pre_gain = *makeup * *amount * 0.01f;
+
+      auto y = x * juce::Decibels::decibelsToGain(env_gain + pre_gain);
       postMem[ch] = y;
 
       outputBuffer[i] = y;

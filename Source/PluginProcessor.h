@@ -45,13 +45,13 @@ private:
   std::atomic<float>* makeup = nullptr;
 
   float* msMem;
-  float* envMem;
   float* postMem;
 
   float currentSampleRate = 44100.0f;
 
   float t2p(float t) { return expf(-1.0f / (t * currentSampleRate)); }
 
+  /*
   float sum(float* x, int numValues)
   {
     float y = 0.0f;
@@ -65,6 +65,7 @@ private:
   {
     return sum(x, numValues) / (float)numValues;
   }
+  */
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 };
